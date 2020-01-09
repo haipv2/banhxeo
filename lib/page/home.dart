@@ -80,7 +80,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home>{
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  "Bánh Xèo Tư Đông",
+                  "Ẩm Thực Á Đông",
                   style: TextStyle(
                     fontSize: 23,
                     fontWeight: FontWeight.w800,
@@ -141,7 +141,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home>{
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  "Gọi Đồ",
+                  "Menu",
                   style: TextStyle(
                     fontSize: 23,
                     fontWeight: FontWeight.w800,

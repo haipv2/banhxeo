@@ -10,76 +10,72 @@ class Maps extends StatefulWidget {
 }
 
 class _MapsState extends State<Maps> {
-  final Map<String, Marker> _markers = {};
+  Map<String, Marker> _markers = {};
 
   Future<void> _onMapCreated(GoogleMapController controller) async {
-    final googleOffices = await map_service.getGoogleOffices();
-//    setState(() {
-      _markers.clear();
-      for (final office in googleOffices.offices) {
-        final marker = Marker(
-          markerId: MarkerId(office.name),
-          position: LatLng(office.lat, office.lng),
-          infoWindow: InfoWindow(
-            title: office.name,
-            snippet: office.address,
-          ),
-        );
-        _markers[office.name] = marker;
-//      }
-    }
-//    );
+    setState(() {
+      InfoWindow infoWindow =
+      InfoWindow(title: "Location" + _markers.length.toString());
+      _markers['banhxeo'] = Marker(
+        markerId: MarkerId(_markers.length.toString()),
+        infoWindow: infoWindow,
+        position: LatLng(20.999151, 105.818176),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),);
+    });
   }
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-  Completer<GoogleMapController> _controller = Completer();
+  MapType _currentMapType = MapType.normal;
+
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
+      home: Scaffold(
+        body: Stack(
+          children: <Widget>[
+            GoogleMap(
+              mapType: _currentMapType,
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: CameraPosition(
+                target: const LatLng(20.999151, 105.818176),
+                zoom: 17,
+              ),
+              markers: _markers.values.toSet(),
+              scrollGesturesEnabled: true,
+              tiltGesturesEnabled: true,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: true,
+              mapToolbarEnabled: true,
+              compassEnabled: true,
+            ),
+          ],
+        ),
       ),
     );
+  }
 
+  Set<Marker> markers = Set();
 
-//    return MaterialApp(
-//      home: Scaffold(
-//          appBar: AppBar(
-//            title: Text('Maps Sample App'),
-//            backgroundColor: Colors.green[700],
-//          ),
-//          body: Stack(
-//            children: <Widget>[
-//              GoogleMap(
-//                  initialCameraPosition: CameraPosition(
-//                      target: LatLng(-33.870840, 151.206286), zoom: 12))
-//            ],
-//          )),
-//    );
-//      return Scaffold(
-//        body: GoogleMap(
-////          onMapCreated: _onMapCreated,
-//          mapType: MapType.hybrid,
-//            onMapCreated:  (GoogleMapController controller) {
-//              _controller.complete(controller);
-//            },
-//            initialCameraPosition: CameraPosition(
-//              target: LatLng(37.42796133580664, -122.085749655962),
-//              zoom: 14.4746,
-////            target: const LatLng(0, 0),
-////            zoom: 12,
-//            ),
-//            markers: _markers.values.toSet(),
-//        ),
-//      );
+  void _onAddMarkerButtonPressed() {
+    InfoWindow infoWindow =
+    InfoWindow(title: "Location" + markers.length.toString());
+
+    Marker marker = Marker(
+      markerId: MarkerId(markers.length.toString()),
+      infoWindow: infoWindow,
+      position: LatLng(20.999151, 105.818176),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+    );
+    setState(() {
+      markers.add(marker);
+    });
+  }
+
+  void _onMapTypeButtonPressed() {
+    setState(() {
+      _currentMapType = _currentMapType == MapType.normal
+          ? MapType.satellite
+          : MapType.normal;
+    });
   }
 }
